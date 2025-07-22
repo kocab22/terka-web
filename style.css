@@ -1,0 +1,153 @@
+body 
+{
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.6;
+  scroll-behavior: smooth;
+}
+header
+{
+  display: flex;
+  position: sticky;
+  top: 0;
+  background:#ffffff80; /* poloprůhledné */
+  padding: 1em;
+  z-index: 1000;
+}
+header nav a 
+{
+  display: flex;
+  position: relative;
+  color: black;
+  margin: 27px 5px;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+header nav a::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 2px;
+  background: #4a4a4a; /* zvolte barvu */
+  transition: width 0.3s;
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+}
+header nav a:hover 
+{
+  color: #424242; /* změna barvy textu při hoveru */
+}
+header nav a:hover::after {
+  width: 100%;
+}
+section 
+{
+  padding: 4em 2em;
+}
+section:nth-child(even) 
+{
+  background: #f4f4f4;
+}
+h2 
+{
+  color: #333;
+}
+footer 
+{
+  background: #333;
+  color: white;
+  text-align: center;
+  padding: 2em;
+}
+#main-nav
+{
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin-left: auto;
+}
+.logo 
+{
+  display: flex;
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-decoration: none;
+  color: #fff;
+}
+
+.logo img 
+{
+  height: 80px;
+}
+
+.hamburger 
+{
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 2rem;
+  background: none;
+  border: none;
+}
+
+.hamburger div 
+{
+  width: 25px;
+  height: 3px;
+  background-color: rgb(255, 255, 255);
+}
+
+@media (max-width: 900px) {
+  .hamburger {
+    display: flex;
+  }
+
+  #main-nav {
+    display: none;
+    background-color: #ececea;
+    position: absolute;
+    top: 60px;
+    right: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 1rem;
+  }
+
+  #main-nav.active {
+    display: block;
+  }
+
+  #main-nav ul {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+.hero 
+{
+  width: 100%;
+  height: 100vh;
+  background-image: url('assets/images/hero2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  z-index: 0;
+  padding-top: 190px; /* stejná výška jako header */
+}
+
+.hero-text {
+  position: absolute;
+  top: 38%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  text-align: center;
+  background: #ececea50;
+  padding: 2em 1em;
+  border-radius: 12px;  
+}
