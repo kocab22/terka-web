@@ -188,3 +188,16 @@ display: inline-block;
 .column {
   flex: 1; /* oba sloupce mají stejnou šířku */
 }
+
+@media (max-width: 600px) {
+  .hero-text {
+    position: absolute;
+    left: 2%;
+    top: 20%;
+    margin-right: 5px;
+    text-size-adjust: 80%;
+  }
+  .logo img {
+    height: 50px; /* zmenšení loga na menších obrazovkách */
+  }
+}
