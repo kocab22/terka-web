@@ -10,11 +10,14 @@ header
   display: flex;
   position: sticky;
   top: 0;
-  background:#ffffff; /* poloprůhledné */
+  background: rgba(255,255,255,1);
   padding: 1em;
-  transition: opacity 0.8s ease;
+  transition: background 0.5s, opacity 0.8s ease;
   /* opacity: 1; */
   z-index: 1000;
+}
+header.transparent {
+  background: rgba(255,255,255,0.5);
 }
 header nav a 
 {
@@ -115,7 +118,7 @@ footer
 
   #main-nav {
     display: none;
-    background-color: #ececea;
+    background-color: #ffffff;
     position: absolute;
     top: 60px;
     right: 10px;
@@ -190,10 +193,13 @@ display: inline-block;
 }
 
 @media (max-width: 600px) {
+  .hero {
+    background-position: 70%;
+  }
   .hero-text {
     position: absolute;
-    left: 2%;
-    top: 20%;
+    left: 5%;
+    top: 40%;
     margin-right: 5px;
     text-size-adjust: 80%;
   }
