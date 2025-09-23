@@ -183,11 +183,10 @@ class ContactForm {
     }
 
     async handleSubmit(e) {
-        e.preventDefault();
-        
         // Validate honeypot field
-        const honeypot = this.form.querySelector('input[name="website"]');
+        const honeypot = this.form.querySelector('input[name="bot-field"]');
         if (honeypot && honeypot.value !== '') {
+            e.preventDefault();
             this.showStatus('Detekován spam. Formulář nebyl odeslán.', 'error');
             return;
         }
@@ -195,12 +194,29 @@ class ContactForm {
         // Validate math question
         const mathAnswer = parseInt(this.mathAnswer.value);
         if (mathAnswer !== this.currentAnswer) {
+            e.preventDefault();
             this.showStatus('Nesprávná odpověď na matematickou otázku. Zkuste to znovu.', 'error');
             this.generateMathQuestion();
             this.mathAnswer.value = '';
             return;
         }
 
+        // Check if this is a Netlify form
+        const netlify = this.form.hasAttribute('data-netlify');
+        
+        if (netlify) {
+            // For Netlify forms, let the default submission happen
+            // Just show loading state and let Netlify handle the rest
+            this.submitBtn.disabled = true;
+            this.submitBtn.textContent = 'Odesílání...';
+            
+            // Don't prevent default - let Netlify handle the submission
+            return;
+        }
+        
+        // For other services, prevent default and handle manually
+        e.preventDefault();
+        
         // Disable submit button
         this.submitBtn.disabled = true;
         this.submitBtn.textContent = 'Odesílání...';
@@ -208,11 +224,8 @@ class ContactForm {
         try {
             // Check which service to use based on form action
             const action = this.form.getAttribute('action');
-            const netlify = this.form.hasAttribute('data-netlify');
             
-            if (netlify) {
-                await this.submitNetlify();
-            } else if (action && action.includes('formspree')) {
+            if (action && action.includes('formspree')) {
                 await this.submitFormspree();
             } else {
                 await this.submitEmailto();
@@ -228,22 +241,6 @@ class ContactForm {
         } finally {
             this.submitBtn.disabled = false;
             this.submitBtn.textContent = 'Odeslat zprávu';
-        }
-    }
-
-    async submitNetlify() {
-        // Netlify Forms automatically handles form submission
-        // We'll use fetch to submit the form data
-        const formData = new FormData(this.form);
-        
-        const response = await fetch('/', {
-            method: 'POST',
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams(formData).toString()
-        });
-        
-        if (!response.ok) {
-            throw new Error('Netlify submission failed');
         }
     }
 
