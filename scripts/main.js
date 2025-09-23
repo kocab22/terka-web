@@ -172,17 +172,20 @@ class ContactForm {
 
     init() {
         this.generateMathQuestion();
-        this.form.addEventListener('submit', this.handleSubmit.bind(this));
+        
+        // Check if this is a Netlify form
+        const netlify = this.form.hasAttribute('data-netlify');
+        
+        if (netlify) {
+            // For Netlify forms, only add validation on submit
+            this.form.addEventListener('submit', this.validateNetlifyForm.bind(this));
+        } else {
+            // For other forms, handle full submission
+            this.form.addEventListener('submit', this.handleSubmit.bind(this));
+        }
     }
 
-    generateMathQuestion() {
-        const num1 = Math.floor(Math.random() * 10) + 1;
-        const num2 = Math.floor(Math.random() * 10) + 1;
-        this.currentAnswer = num1 + num2;
-        this.mathQuestion.textContent = `${num1} + ${num2}`;
-    }
-
-    async handleSubmit(e) {
+    validateNetlifyForm(e) {
         // Validate honeypot field
         const honeypot = this.form.querySelector('input[name="bot-field"]');
         if (honeypot && honeypot.value !== '') {
@@ -201,22 +204,39 @@ class ContactForm {
             return;
         }
 
-        // Check if this is a Netlify form
-        const netlify = this.form.hasAttribute('data-netlify');
+        // If validation passes, just show loading state and let Netlify handle the rest
+        this.submitBtn.disabled = true;
+        this.submitBtn.textContent = 'Odesílání...';
         
-        if (netlify) {
-            // For Netlify forms, let the default submission happen
-            // Just show loading state and let Netlify handle the rest
-            this.submitBtn.disabled = true;
-            this.submitBtn.textContent = 'Odesílání...';
-            
-            // Don't prevent default - let Netlify handle the submission
-            return;
-        }
-        
-        // For other services, prevent default and handle manually
+        // Let the form submit naturally to Netlify
+    }
+
+    generateMathQuestion() {
+        const num1 = Math.floor(Math.random() * 10) + 1;
+        const num2 = Math.floor(Math.random() * 10) + 1;
+        this.currentAnswer = num1 + num2;
+        this.mathQuestion.textContent = `${num1} + ${num2}`;
+    }
+
+    async handleSubmit(e) {
         e.preventDefault();
         
+        // Validate honeypot field
+        const honeypot = this.form.querySelector('input[name="bot-field"]');
+        if (honeypot && honeypot.value !== '') {
+            this.showStatus('Detekován spam. Formulář nebyl odeslán.', 'error');
+            return;
+        }
+
+        // Validate math question
+        const mathAnswer = parseInt(this.mathAnswer.value);
+        if (mathAnswer !== this.currentAnswer) {
+            this.showStatus('Nesprávná odpověď na matematickou otázku. Zkuste to znovu.', 'error');
+            this.generateMathQuestion();
+            this.mathAnswer.value = '';
+            return;
+        }
+
         // Disable submit button
         this.submitBtn.disabled = true;
         this.submitBtn.textContent = 'Odesílání...';
