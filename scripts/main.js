@@ -308,8 +308,8 @@ class ContactForm {
     }
 }
 
-// Initialize rating system and contact form when DOM is loaded
+// Initialize only rating system when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     new RatingSystem();
-    new ContactForm();
+    // Removed ContactForm initialization - letting Netlify handle forms natively
 });
