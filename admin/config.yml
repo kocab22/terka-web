@@ -2,15 +2,120 @@ backend:
   name: git-gateway
   branch: main
 
+# Media files budou ukládány do assets/uploads
 media_folder: "assets/uploads"
 public_folder: "/assets/uploads"
 
+# Lokalizace
+locale: 'cs'
+
+# Konfigurace kolekcí
 collections:
+  # Blog příspěvky
   - name: "blog"
-    label: "Blog"
-    folder: "posts"
+    label: "Blog příspěvky"
+    folder: "blog"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - { label: "Titulek", name: "title", widget: "string", required: true }
+      - { label: "Datum publikování", name: "date", widget: "datetime", required: true }
+      - { label: "Úvodní obrázek", name: "featured_image", widget: "image", required: false }
+      - { label: "Excerpt (krátký popis)", name: "excerpt", widget: "text", required: false }
+      - { label: "Tagy", name: "tags", widget: "list", required: false }
+      - { label: "Obsah", name: "body", widget: "markdown", required: true }
+      - { label: "Publikováno", name: "published", widget: "boolean", default: true }
+
+  # Stránky webu
+  - name: "pages"
+    label: "Stránky"
+    files:
+      - label: "Úvodní stránka"
+        name: "home"
+        file: "content/home.yml"
+        fields:
+          - { label: "Hlavní titulek", name: "hero_title", widget: "string" }
+          - { label: "Podtitulek", name: "hero_subtitle", widget: "string" }
+          - { label: "Text tlačítka", name: "hero_button_text", widget: "string" }
+          
+      - label: "O mně"
+        name: "about"
+        file: "content/about.yml"
+        fields:
+          - { label: "Titulek sekce", name: "title", widget: "string" }
+          - { label: "Levý sloupec", name: "left_column", widget: "markdown" }
+          - { label: "Pravý sloupec", name: "right_column", widget: "markdown" }
+          
+      - label: "Co dělám"
+        name: "services"
+        file: "content/services.yml"
+        fields:
+          - { label: "Titulek sekce", name: "title", widget: "string" }
+          - { label: "Obsah", name: "content", widget: "markdown" }
+          
+      - label: "Ceník"
+        name: "pricing"
+        file: "content/pricing.yml"
+        fields:
+          - { label: "Titulek sekce", name: "title", widget: "string" }
+          - { label: "Obsah", name: "content", widget: "markdown" }
+          
+      - label: "FAQ"
+        name: "faq"
+        file: "content/faq.yml"
+        fields:
+          - { label: "Titulek sekce", name: "title", widget: "string" }
+          - { label: "Úvod", name: "intro", widget: "text" }
+          - label: "Otázky a odpovědi"
+            name: "faqs"
+            widget: "list"
+            fields:
+              - { label: "Otázka", name: "question", widget: "string" }
+              - { label: "Odpověď", name: "answer", widget: "markdown" }
+
+  # Reference
+  - name: "testimonials"
+    label: "Reference"
+    folder: "testimonials"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Jméno klienta", name: "name", widget: "string", required: true }
+      - { label: "Avatar (emoji nebo obrázek)", name: "avatar", widget: "string", required: false }
+      - { label: "Hodnocení", name: "quote", widget: "text", required: true }
+      - { label: "Pořadí zobrazení", name: "order", widget: "number", default: 1 }
+      - { label: "Zobrazit", name: "published", widget: "boolean", default: true }
+
+  # Nastavení webu
+  - name: "settings"
+    label: "Nastavení webu"
+    files:
+      - label: "Kontaktní údaje"
+        name: "contact"
+        file: "content/contact.yml"
+        fields:
+          - { label: "Email", name: "email", widget: "string" }
+          - { label: "Telefon", name: "phone", widget: "string" }
+          - { label: "Facebook URL", name: "facebook_url", widget: "string", required: false }
+          - { label: "Instagram URL", name: "instagram_url", widget: "string", required: false }
+          - label: "Rozvrh hodin"
+            name: "schedule"
+            widget: "object"
+            fields:
+              - { label: "Pondělí", name: "monday", widget: "string", default: "7:00 – 15:00" }
+              - { label: "Úterý", name: "tuesday", widget: "string", default: "7:00 – 15:00" }
+              - { label: "Středa", name: "wednesday", widget: "string", default: "7:00 – 15:00" }
+              - { label: "Čtvrtek", name: "thursday", widget: "string", default: "7:00 – 15:00" }
+              - { label: "Pátek", name: "friday", widget: "string", default: "7:00 – 15:00" }
+              - { label: "Sobota", name: "saturday", widget: "string", default: "–" }
+              - { label: "Neděle", name: "sunday", widget: "string", default: "–" }
+          - { label: "Poznámka k rozvrhu", name: "schedule_note", widget: "string", default: "V červenci výuka neprobíhá." }
+      
+      - label: "SEO nastavení"
+        name: "seo"
+        file: "content/seo.yml"
+        fields:
+          - { label: "Název webu", name: "site_title", widget: "string" }
+          - { label: "Popis webu", name: "site_description", widget: "text" }
+          - { label: "Klíčová slova", name: "keywords", widget: "string" }
+          - { label: "Autor", name: "author", widget: "string" }

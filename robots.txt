@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /
+
+# Sitemap: https://YOUR_DOMAIN.netlify.app/sitemap.xml
+# Po spuštění webu odkomentujte sitemap a změňte Disallow na konkrétní složky které nechcete indexovat
