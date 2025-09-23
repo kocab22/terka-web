@@ -162,53 +162,49 @@ class RatingSystem {
 class ContactForm {
     constructor() {
         this.form = document.getElementById('contact-form');
+        
+        // Check if form exists and if it's a Netlify form
+        if (!this.form) return;
+        
+        const isNetlifyForm = this.form.hasAttribute('data-netlify');
+        
+        if (isNetlifyForm) {
+            // For Netlify forms, only add basic math validation
+            this.initNetlifyForm();
+        } else {
+            // For other forms, use full JavaScript handling
+            this.initRegularForm();
+        }
+    }
+
+    initNetlifyForm() {
+        this.mathQuestion = document.getElementById('math-question');
+        this.mathAnswer = document.getElementById('math-answer');
+        this.generateMathQuestion();
+        
+        // Only validate math question on submit, let Netlify handle the rest
+        this.form.addEventListener('submit', (e) => {
+            const mathAnswer = parseInt(this.mathAnswer.value);
+            if (mathAnswer !== this.currentAnswer) {
+                e.preventDefault();
+                alert('Nesprávná odpověď na matematickou otázku. Zkuste to znovu.');
+                this.generateMathQuestion();
+                this.mathAnswer.value = '';
+                return false;
+            }
+            // If math is correct, let Netlify handle the form submission
+        });
+    }
+
+    initRegularForm() {
         this.statusDiv = document.getElementById('form-status');
         this.submitBtn = this.form.querySelector('.submit-btn');
         this.mathQuestion = document.getElementById('math-question');
         this.mathAnswer = document.getElementById('math-answer');
         this.currentAnswer = 0;
-        this.init();
-    }
-
-    init() {
+        
         this.generateMathQuestion();
-        
-        // Check if this is a Netlify form
-        const netlify = this.form.hasAttribute('data-netlify');
-        
-        if (netlify) {
-            // For Netlify forms, only add validation on submit
-            this.form.addEventListener('submit', this.validateNetlifyForm.bind(this));
-        } else {
-            // For other forms, handle full submission
-            this.form.addEventListener('submit', this.handleSubmit.bind(this));
-        }
-    }
-
-    validateNetlifyForm(e) {
-        // Validate honeypot field
-        const honeypot = this.form.querySelector('input[name="bot-field"]');
-        if (honeypot && honeypot.value !== '') {
-            e.preventDefault();
-            this.showStatus('Detekován spam. Formulář nebyl odeslán.', 'error');
-            return;
-        }
-
-        // Validate math question
-        const mathAnswer = parseInt(this.mathAnswer.value);
-        if (mathAnswer !== this.currentAnswer) {
-            e.preventDefault();
-            this.showStatus('Nesprávná odpověď na matematickou otázku. Zkuste to znovu.', 'error');
-            this.generateMathQuestion();
-            this.mathAnswer.value = '';
-            return;
-        }
-
-        // If validation passes, just show loading state and let Netlify handle the rest
-        this.submitBtn.disabled = true;
-        this.submitBtn.textContent = 'Odesílání...';
-        
-        // Let the form submit naturally to Netlify
+        this.form.addEventListener('submit', this.handleSubmit.bind(this));
     }
 
     generateMathQuestion() {
