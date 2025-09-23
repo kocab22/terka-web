@@ -15,10 +15,6 @@
   [headers.values]
     X-Frame-Options = "SAMEORIGIN"
 
-# Netlify Forms - kontaktní formulář
-[[plugins]]
-  package = "@netlify/plugin-forms"
-
 # 404 stránka
 [[redirects]]
   from = "/*"
