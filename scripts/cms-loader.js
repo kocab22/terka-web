@@ -48,30 +48,53 @@ class CMSLoader {
   parseYAML(yamlText) {
     const data = {};
     const lines = yamlText.split('\n');
+    let currentKey = null;
+    let currentValue = '';
+    let isMultiline = false;
     
-    for (let line of lines) {
-      line = line.trim();
-      if (!line || line.startsWith('#')) continue;
+    for (let i = 0; i < lines.length; i++) {
+      let line = lines[i];
+      const trimmedLine = line.trim();
       
-      if (line.includes(':')) {
-        const colonIndex = line.indexOf(':');
-        const key = line.substring(0, colonIndex).trim();
-        let value = line.substring(colonIndex + 1).trim();
-        
-        // Odstraň úvodní a koncové uvozovky
-        if ((value.startsWith('"') && value.endsWith('"')) ||
-            (value.startsWith("'") && value.endsWith("'"))) {
-          value = value.slice(1, -1);
+      if (!trimmedLine || trimmedLine.startsWith('#')) continue;
+      
+      if (trimmedLine.includes(':') && !isMultiline) {
+        // Pokud jsme byli v multiline módu, uložíme předchozí hodnotu
+        if (currentKey && isMultiline) {
+          data[currentKey] = currentValue.trim();
+          currentValue = '';
+          isMultiline = false;
         }
         
-        // Zpracuj víceřádkový obsah (>)
+        const colonIndex = trimmedLine.indexOf(':');
+        currentKey = trimmedLine.substring(0, colonIndex).trim();
+        let value = trimmedLine.substring(colonIndex + 1).trim();
+        
+        // Zkontroluj, jestli je to víceřádkový text
         if (value === '>') {
-          value = '';
-          continue; // Víceřádkový obsah zatím přeskočíme pro jednoduchost
+          isMultiline = true;
+          currentValue = '';
+        } else {
+          // Odstraň úvodní a koncové uvozovky
+          if ((value.startsWith('"') && value.endsWith('"')) ||
+              (value.startsWith("'") && value.endsWith("'"))) {
+            value = value.slice(1, -1);
+          }
+          data[currentKey] = value;
+          currentKey = null;
         }
-        
-        data[key] = value;
+      } else if (isMultiline && currentKey) {
+        // Přidej řádek k víceřádkové hodnotě
+        if (trimmedLine) {
+          if (currentValue) currentValue += ' ';
+          currentValue += trimmedLine;
+        }
       }
+    }
+    
+    // Uložíme poslední víceřádkovou hodnotu
+    if (currentKey && isMultiline) {
+      data[currentKey] = currentValue.trim();
     }
     
     return data;
@@ -97,10 +120,10 @@ class CMSLoader {
   }
 
   updateAboutSection(data) {
-    // Aktualizuj about sekci
-    const aboutTitle = document.querySelector('#co h2');
-    const leftColumn = document.querySelector('#co .two-column .column:first-child p');
-    const rightColumn = document.querySelector('#co .two-column .column:last-child p');
+    // Aktualizuj about sekci - sekce má ID "kdo"
+    const aboutTitle = document.querySelector('#kdo h2');
+    const leftColumn = document.querySelector('#kdo .two-columns .column:first-child');
+    const rightColumn = document.querySelector('#kdo .two-columns .column:last-child');
 
     if (aboutTitle && data.title) {
       aboutTitle.textContent = data.title;
