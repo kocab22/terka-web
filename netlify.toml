@@ -15,6 +15,13 @@
   [headers.values]
     X-Frame-Options = "SAMEORIGIN"
 
+# YAML soubory pro CMS
+[[headers]]
+  for = "/content/*.yml"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    Access-Control-Allow-Origin = "*"
+
 # 404 stránka
 [[redirects]]
   from = "/*"

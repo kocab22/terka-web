@@ -5,7 +5,22 @@
   <link rel="stylesheet" href="style.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Výuka angličtiny online | Tereza Výtisková</title>
-  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/7/73/Iconic_image_of_a_computer_gear.svg" type="image/svg+xml">
+  <l  <script src="scripts/main.js"></script>
+  <script src="scripts/cms-loader.js"></script>
+
+<!-- Netlify Identity Widget -->
+<script>
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("init", user => {
+      if (!user) {
+        window.netlifyIdentity.on("login", () => {
+          document.location.href = "/admin/";
+        });
+      }
+    });
+  }
+</script>
+</body>href="https://upload.wikimedia.org/wikipedia/commons/7/73/Iconic_image_of_a_computer_gear.svg" type="image/svg+xml">
   <meta name="description" content="Osobní stránka učitelky angličtiny." />
   <meta name="keywords" content="učitelka, angličtina" />
   <meta name="author" content="Jaromír Kaláb" />

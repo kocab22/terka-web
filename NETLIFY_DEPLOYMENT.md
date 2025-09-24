@@ -118,11 +118,11 @@ Přidejte do `index.html` před `</head>`:
 
 ## 📋 Checklist před spuštěním
 
-- [ ] Repository pushed na GitHub
-- [ ] Site nasazen na Netlify  
-- [ ] Netlify Forms povolen
-- [ ] Netlify Identity nastaven
-- [ ] Admin uživatel pozván
+- [x] Repository pushed na GitHub
+- [x] Site nasazen na Netlify  
+- [x] Netlify Forms povolen
+- [x] Netlify Identity nastaven
+- [x] Admin uživatel pozván
 - [ ] Testovací email formuláře odeslán
 - [ ] CMS přístup otestován
 - [ ] robots.txt zkontrolován (blokuje Google)
