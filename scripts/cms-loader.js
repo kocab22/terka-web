@@ -99,6 +99,21 @@ class CMSLoader {
     return data;
   }
 
+  // Převede základní Markdown na HTML
+  markdownToHtml(text) {
+    if (!text) return '';
+    
+    return text
+      // Bold + Italic: ***text*** -> <strong><em>text</em></strong>
+      .replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>')
+      // Bold: **text** -> <strong>text</strong>
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      // Italic: *text* -> <em>text</em>
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      // Zachovej odřádkování
+      .replace(/\n/g, '<br>');
+  }
+
   updateHomeSection(data) {
     // Aktualizuj hero sekci
     const heroTitle = document.querySelector('.hero-text h1');
@@ -129,11 +144,11 @@ class CMSLoader {
     }
 
     if (leftColumn && data.left_column) {
-      leftColumn.textContent = data.left_column;
+      leftColumn.innerHTML = this.markdownToHtml(data.left_column);
     }
 
     if (rightColumn && data.right_column) {
-      rightColumn.textContent = data.right_column;
+      rightColumn.innerHTML = this.markdownToHtml(data.right_column);
     }
   }
 }
