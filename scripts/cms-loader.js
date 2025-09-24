@@ -10,6 +10,10 @@ class CMSLoader {
     try {
       await this.loadHomeContent();
       await this.loadAboutContent();
+      await this.loadServicesContent();
+      await this.loadPricingContent();
+      await this.loadFaqContent();
+      await this.loadContactContent();
       console.log('CMS content loaded successfully');
     } catch (error) {
       console.error('Error loading CMS content:', error);
@@ -42,6 +46,62 @@ class CMSLoader {
       this.updateAboutSection(aboutData);
     } catch (error) {
       console.warn('Could not load about content from CMS:', error);
+    }
+  }
+
+  async loadServicesContent() {
+    try {
+      const response = await fetch('/content/services.yml');
+      if (!response.ok) throw new Error('Failed to load services.yml');
+      
+      const yamlText = await response.text();
+      const servicesData = this.parseYAML(yamlText);
+      
+      this.updateServicesSection(servicesData);
+    } catch (error) {
+      console.warn('Could not load services content from CMS:', error);
+    }
+  }
+
+  async loadPricingContent() {
+    try {
+      const response = await fetch('/content/pricing.yml');
+      if (!response.ok) throw new Error('Failed to load pricing.yml');
+      
+      const yamlText = await response.text();
+      const pricingData = this.parseYAML(yamlText);
+      
+      this.updatePricingSection(pricingData);
+    } catch (error) {
+      console.warn('Could not load pricing content from CMS:', error);
+    }
+  }
+
+  async loadFaqContent() {
+    try {
+      const response = await fetch('/content/faq.yml');
+      if (!response.ok) throw new Error('Failed to load faq.yml');
+      
+      const yamlText = await response.text();
+      const faqData = this.parseYAML(yamlText);
+      
+      this.updateFaqSection(faqData);
+    } catch (error) {
+      console.warn('Could not load faq content from CMS:', error);
+    }
+  }
+
+  async loadContactContent() {
+    try {
+      const response = await fetch('/content/contact.yml');
+      if (!response.ok) throw new Error('Failed to load contact.yml');
+      
+      const yamlText = await response.text();
+      const contactData = this.parseYAML(yamlText);
+      
+      this.updateContactSection(contactData);
+    } catch (error) {
+      console.warn('Could not load contact content from CMS:', error);
     }
   }
 
@@ -149,6 +209,94 @@ class CMSLoader {
 
     if (rightColumn && data.right_column) {
       rightColumn.innerHTML = this.markdownToHtml(data.right_column);
+    }
+  }
+
+  updateServicesSection(data) {
+    // Aktualizuj "Co dělám" sekci - sekce má ID "co"
+    const servicesTitle = document.querySelector('#co h2');
+    const servicesContent = document.querySelector('#co p');
+
+    if (servicesTitle && data.title) {
+      servicesTitle.textContent = data.title;
+    }
+
+    if (servicesContent && data.content) {
+      servicesContent.innerHTML = this.markdownToHtml(data.content);
+    }
+  }
+
+  updatePricingSection(data) {
+    // Aktualizuj "Ceník" sekci - sekce má ID "cena"
+    const pricingTitle = document.querySelector('#cena h2');
+    const pricingContent = document.querySelector('#cena p');
+
+    if (pricingTitle && data.title) {
+      pricingTitle.textContent = data.title;
+    }
+
+    if (pricingContent && data.content) {
+      pricingContent.innerHTML = this.markdownToHtml(data.content);
+    }
+  }
+
+  updateFaqSection(data) {
+    // Aktualizuj FAQ sekci - sekce má ID "faq"
+    const faqTitle = document.querySelector('#faq h2');
+    const faqContent = document.querySelector('#faq p');
+
+    if (faqTitle && data.title) {
+      faqTitle.textContent = data.title;
+    }
+
+    if (faqContent && data.intro) {
+      faqContent.innerHTML = this.markdownToHtml(data.intro);
+    }
+  }
+
+  updateContactSection(data) {
+    // Aktualizuj kontaktní informace
+    const emailLink = document.querySelector('.contact-details a[href^="mailto:"]');
+    const phoneLink = document.querySelector('.contact-details a[href^="tel:"]');
+    
+    // Rozvrh
+    const scheduleItems = {
+      monday: document.querySelector('.schedule .schedule-item:nth-child(1) .time'),
+      tuesday: document.querySelector('.schedule .schedule-item:nth-child(2) .time'),
+      wednesday: document.querySelector('.schedule .schedule-item:nth-child(3) .time'),
+      thursday: document.querySelector('.schedule .schedule-item:nth-child(4) .time'),
+      friday: document.querySelector('.schedule .schedule-item:nth-child(5) .time'),
+      saturday: document.querySelector('.schedule .schedule-item:nth-child(6) .time'),
+      sunday: document.querySelector('.schedule .schedule-item:nth-child(7) .time')
+    };
+
+    const scheduleNote = document.querySelector('.vacation-notice p');
+
+    // Aktualizuj email
+    if (emailLink && data.email) {
+      emailLink.href = `mailto:${data.email}`;
+      emailLink.textContent = data.email;
+    }
+
+    // Aktualizuj telefon
+    if (phoneLink && data.phone) {
+      phoneLink.href = `tel:${data.phone}`;
+      phoneLink.textContent = data.phone;
+    }
+
+    // Aktualizuj rozvrh
+    if (data.schedule) {
+      Object.keys(scheduleItems).forEach(day => {
+        const element = scheduleItems[day];
+        if (element && data.schedule[day]) {
+          element.textContent = data.schedule[day];
+        }
+      });
+    }
+
+    // Aktualizuj poznámku o rozvrhu
+    if (scheduleNote && data.schedule_note) {
+      scheduleNote.innerHTML = `<strong>Poznámka:</strong> ${data.schedule_note}`;
     }
   }
 }
