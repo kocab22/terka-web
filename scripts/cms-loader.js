@@ -33,15 +33,21 @@ class CMSLoader {
 
   async loadAboutContent() {
     try {
+      console.log('Loading about content...');
       const response = await fetch('/content/about.yml');
+      console.log('About response status:', response.status, response.ok);
+      
       if (!response.ok) throw new Error('Failed to load about.yml');
       
       const yamlText = await response.text();
+      console.log('About YAML text:', yamlText);
+      
       const aboutData = this.parseYAML(yamlText);
+      console.log('Parsed about data:', aboutData);
       
       this.updateAboutSection(aboutData);
     } catch (error) {
-      console.warn('Could not load about content from CMS:', error);
+      console.error('Could not load about content from CMS:', error);
     }
   }
 
@@ -120,20 +126,31 @@ class CMSLoader {
   }
 
   updateAboutSection(data) {
+    console.log('Updating about section with data:', data);
+    
     // Aktualizuj about sekci - sekce má ID "kdo"
     const aboutTitle = document.querySelector('#kdo h2');
     const leftColumn = document.querySelector('#kdo .two-columns .column:first-child');
     const rightColumn = document.querySelector('#kdo .two-columns .column:last-child');
 
+    console.log('Found elements:', {
+      aboutTitle: aboutTitle ? 'found' : 'NOT FOUND',
+      leftColumn: leftColumn ? 'found' : 'NOT FOUND', 
+      rightColumn: rightColumn ? 'found' : 'NOT FOUND'
+    });
+
     if (aboutTitle && data.title) {
+      console.log('Setting title to:', data.title);
       aboutTitle.textContent = data.title;
     }
 
     if (leftColumn && data.left_column) {
+      console.log('Setting left column to:', data.left_column);
       leftColumn.textContent = data.left_column;
     }
 
     if (rightColumn && data.right_column) {
+      console.log('Setting right column to:', data.right_column);
       rightColumn.textContent = data.right_column;
     }
   }
