@@ -117,49 +117,70 @@ class CMSLoader {
     let currentKey = null;
     let currentValue = '';
     let isMultiline = false;
+    let multilineType = null; // '>' for folded, '|-' for literal
     
     for (let i = 0; i < lines.length; i++) {
-      let line = lines[i];
+      const line = lines[i];
       const trimmedLine = line.trim();
       
-      if (!trimmedLine || trimmedLine.startsWith('#')) continue;
+      // Prázdné řádky a komentáře
+      if (!trimmedLine || trimmedLine.startsWith('#')) {
+        // V literal módu (|-) zachováváme prázdné řádky
+        if (isMultiline && multilineType === '|-' && currentKey) {
+          currentValue += '\n';
+        }
+        continue;
+      }
       
-      // Pokud najdeme nový klíč (obsahuje :), ukončíme případný multiline
-      if (trimmedLine.includes(':')) {
-        // Pokud jsme byli v multiline módu, uložíme předchozí hodnotu
+      // Detekce nového klíče (musí být na začátku řádku, bez odsazení)
+      if (line.match(/^[a-zA-Z][^:]*:/) && !line.startsWith('  ')) {
+        // Ukončíme předchozí multiline hodnotu
         if (currentKey && isMultiline) {
-          data[currentKey] = currentValue.trim();
-          currentValue = '';
-          isMultiline = false;
+          data[currentKey] = multilineType === '|-' ? currentValue.replace(/\n$/, '') : currentValue.trim();
         }
         
-        const colonIndex = trimmedLine.indexOf(':');
-        currentKey = trimmedLine.substring(0, colonIndex).trim();
-        let value = trimmedLine.substring(colonIndex + 1).trim();
+        // Parsování nového klíče
+        const colonIndex = line.indexOf(':');
+        currentKey = line.substring(0, colonIndex).trim();
+        let value = line.substring(colonIndex + 1).trim();
         
-        // Zkontroluj, jestli je to víceřádkový text
         if (value === '>' || value === '|-') {
+          // Start multiline
           isMultiline = true;
+          multilineType = value;
           currentValue = '';
-        } else {
-          // Odstraň úvodní a koncové uvozovky
-          if ((value.startsWith('"') && value.endsWith('"')) ||
-              (value.startsWith("'") && value.endsWith("'"))) {
-            value = value.slice(1, -1);
-          }
+        } else if (value) {
+          // Jednořádková hodnota
           data[currentKey] = value;
           currentKey = null;
+          isMultiline = false;
+          multilineType = null;
+        } else {
+          // Prázdná hodnota
+          data[currentKey] = '';
+          currentKey = null;
+          isMultiline = false;
+          multilineType = null;
         }
-      } else if (isMultiline && currentKey && trimmedLine) {
-        // Přidej řádek k víceřádkové hodnotě pouze pokud nejsme na novém klíči
-        if (currentValue) currentValue += ' ';
-        currentValue += trimmedLine;
+      } else if (isMultiline && currentKey) {
+        // Multiline obsah (musí být odsazený)
+        const content = line.replace(/^  /, ''); // Odstraň 2 mezery odsazení
+        
+        if (multilineType === '|-') {
+          // Literal mode - zachováváme původní formátování
+          if (currentValue) currentValue += '\n';
+          currentValue += content;
+        } else {
+          // Folded mode (>) - spojujeme řádky mezerami
+          if (currentValue && content) currentValue += ' ';
+          currentValue += content;
+        }
       }
     }
     
-    // Uložíme poslední víceřádkovou hodnotu
+    // Uložíme poslední multiline hodnotu
     if (currentKey && isMultiline) {
-      data[currentKey] = currentValue.trim();
+      data[currentKey] = multilineType === '|-' ? currentValue.replace(/\n$/, '') : currentValue.trim();
     }
     
     return data;
