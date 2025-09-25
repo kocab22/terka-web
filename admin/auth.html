@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Přihlášení do CMS</title>
+  <script>
+    (function() {
+      function getUrlParams() {
+        const params = {};
+        window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(str, key, value) {
+          params[key] = value;
+        });
+        return params;
+      }
+
+      function popup(url, width, height) {
+        const left = (screen.width / 2) - (width / 2);
+        const top = (screen.height / 2) - (height / 2);
+        const options = `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`;
+        
+        return window.open(url, 'popup', options);
+      }
+
+      function receiveMessage(e) {
+        console.log("receiveMessage %o", e);
+        
+        if (e.origin !== "https://github.com") {
+          console.log("Invalid origin: %s", e.origin);
+          return;
+        }
+        
+        // GitHub OAuth callback sends us the auth code
+        if (e.data.type === 'authorization_response') {
+          const authCode = e.data.code;
+          console.log('Auth code received:', authCode);
+          
+          // Redirect back to admin with the code
+          if (window.opener) {
+            window.opener.postMessage({
+              type: 'authorization_response',
+              provider: 'github',
+              token: authCode
+            }, window.location.origin);
+            window.close();
+          } else {
+            // Fallback for popup blocked scenarios
+            window.location.href = `/admin/#access_token=${authCode}&token_type=bearer&provider=github`;
+          }
+        }
+      }
+
+      const params = getUrlParams();
+      
+      if (params.code) {
+        // We got the authorization code from GitHub
+        console.log('GitHub auth code:', params.code);
+        
+        // Send message to parent window
+        if (window.opener) {
+          window.opener.postMessage({
+            type: 'authorization_response',
+            provider: 'github',
+            token: params.code
+          }, window.location.origin);
+          window.close();
+        } else {
+          // Redirect to admin with token
+          window.location.href = `/admin/#access_token=${params.code}&token_type=bearer&provider=github`;
+        }
+      } else {
+        // Start OAuth flow
+        const CLIENT_ID = 'Ov23livmtSHP9fK5bppl';
+        const REDIRECT_URI = encodeURIComponent(window.location.href);
+        const SCOPE = 'repo';
+        
+        const authUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}`;
+        
+        console.log('Redirecting to GitHub OAuth:', authUrl);
+        window.location.href = authUrl;
+      }
+
+      window.addEventListener("message", receiveMessage, false);
+    })();
+  </script>
+</head>
+<body>
+  <p>Přesměrování na GitHub pro přihlášení...</p>
+</body>
+</html>
