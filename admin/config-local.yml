@@ -1,0 +1,104 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Lokální development s proxy
+local_backend: true
+
+# Media files budou ukládány do assets/uploads
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+
+# Lokalizace
+locale: 'cs'
+
+# Konfigurace kolekcí (stejné jako v produkčním config.yml)
+collections:
+  # Blog příspěvky
+  - name: "blog"
+    label: "Blog příspěvky"
+    folder: "blog"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Titulek", name: "title", widget: "string"}
+      - {label: "Datum publikace", name: "date", widget: "datetime"}
+      - {label: "Obsah", name: "body", widget: "markdown"}
+
+  # Stránky webu
+  - name: "pages"
+    label: "Stránky"
+    files:
+      # Úvodní stránka
+      - name: "home"
+        label: "Úvodní stránka"
+        file: "content/home.yml"
+        fields:
+          - {label: "Hlavní titulek", name: "hero_title", widget: "string"}
+          - {label: "Podtitulek", name: "hero_subtitle", widget: "string"}
+          - {label: "Text tlačítka", name: "hero_button_text", widget: "string"}
+
+      # O mně sekce
+      - name: "about"
+        label: "O mně"
+        file: "content/about.yml"
+        fields:
+          - {label: "Titulek", name: "title", widget: "string"}
+          - {label: "Text vlevo", name: "content_left", widget: "markdown"}
+          - {label: "Text vpravo", name: "content_right", widget: "markdown"}
+
+      # Co dělám sekce
+      - name: "services"
+        label: "Co dělám"
+        file: "content/services.yml"
+        fields:
+          - {label: "Titulek", name: "title", widget: "string"}
+          - {label: "Obsah", name: "content", widget: "markdown"}
+
+      # Ceník sekce
+      - name: "pricing"
+        label: "Ceník"
+        file: "content/pricing.yml"
+        fields:
+          - {label: "Titulek", name: "title", widget: "string"}
+          - {label: "Obsah", name: "content", widget: "markdown"}
+
+      # FAQ sekce
+      - name: "faq"
+        label: "FAQ"
+        file: "content/faq.yml"
+        fields:
+          - {label: "Titulek", name: "title", widget: "string"}
+          - {label: "Obsah", name: "content", widget: "markdown"}
+
+      # Kontakt sekce
+      - name: "contact"
+        label: "Kontakt"
+        file: "content/contact.yml"
+        fields:
+          - {label: "Titulek", name: "title", widget: "string"}
+          - {label: "Obsah", name: "content", widget: "markdown"}
+
+  # Reference
+  - name: "references"
+    label: "Reference"
+    folder: "content/references"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Jméno", name: "name", widget: "string"}
+      - {label: "Text reference", name: "content", widget: "text"}
+      - {label: "Obrázek", name: "image", widget: "image", required: false}
+
+  # Nastavení webu
+  - name: "settings"
+    label: "Nastavení webu"
+    files:
+      - name: "general"
+        label: "Obecné nastavení"
+        file: "content/settings.yml"
+        fields:
+          - {label: "Název webu", name: "site_title", widget: "string"}
+          - {label: "Popis webu", name: "site_description", widget: "text"}
+          - {label: "Kontaktní email", name: "contact_email", widget: "string"}
+          - {label: "Telefon", name: "contact_phone", widget: "string"}

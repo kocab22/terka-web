@@ -4,7 +4,8 @@
   "main": "emailjs-example.js",
   "scripts": {
     "cms:dev": "netlify-cms-proxy-server",
-    "dev": "npx http-server . -p 8080 & npm run cms:dev",
+    "dev:server": "npx http-server . -p 8080",
+    "dev": "concurrently \"npm run cms:dev\" \"npm run dev:server\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
