@@ -1,5 +1,6 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: kocab22/terka-web
   branch: main
 
 # Media files budou ukládány do assets/uploads

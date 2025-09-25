@@ -9,9 +9,6 @@
   <meta name="keywords" content="učitelka, angličtina" />
   <meta name="author" content="Jaromír Kaláb" />
   <link href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap" rel="stylesheet">
-  
-  <!-- Netlify Identity Widget -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 </head>
 <body>
@@ -260,27 +257,7 @@
 
 <!-- Netlify Identity Widget -->
 <script>
-  if (window.netlifyIdentity) {
-    window.netlifyIdentity.on("init", user => {
-      if (!user) {
-        window.netlifyIdentity.on("login", () => {
-          document.location.href = "/admin/";
-        });
-      }
   <script src="scripts/main.js"></script>
   <script src="scripts/cms-loader.js"></script>
-
-  <!-- Netlify Identity Widget -->
-  <script>
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on("init", user => {
-        if (!user) {
-          window.netlifyIdentity.on("login", () => {
-            document.location.href = "/admin/";
-          });
-        }
-      });
-    }
-  </script>
 </body>
 </html>
