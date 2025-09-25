@@ -2,6 +2,8 @@ backend:
   name: github
   repo: kocab22/terka-web
   branch: main
+  base_url: https://netlify-cms-oauth-provider-go.herokuapp.com
+  auth_endpoint: /auth
 
 site_url: https://kocab22.github.io/terka-web
 
