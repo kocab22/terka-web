@@ -14,7 +14,6 @@ class CMSLoader {
       await this.loadPricingContent();
       await this.loadFaqContent();
       await this.loadContactContent();
-      console.log('CMS content loaded successfully');
     } catch (error) {
       console.error('Error loading CMS content:', error);
       // Pokud se nepodaří načíst CMS data, ponecháme původní HTML
@@ -55,11 +54,7 @@ class CMSLoader {
       if (!response.ok) throw new Error('Failed to load services.yml');
       
       const yamlText = await response.text();
-      console.log('Services YAML text:', yamlText);
-      
       const servicesData = this.parseYAML(yamlText);
-      console.log('Parsed services data:', servicesData);
-      
       this.updateServicesSection(servicesData);
     } catch (error) {
       console.warn('Could not load services content from CMS:', error);
@@ -72,11 +67,7 @@ class CMSLoader {
       if (!response.ok) throw new Error('Failed to load pricing.yml');
       
       const yamlText = await response.text();
-      console.log('Pricing YAML text:', yamlText);
-      
       const pricingData = this.parseYAML(yamlText);
-      console.log('Parsed pricing data:', pricingData);
-      
       this.updatePricingSection(pricingData);
     } catch (error) {
       console.warn('Could not load pricing content from CMS:', error);

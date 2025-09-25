@@ -1,25 +1,24 @@
 {
   "name": "terka-web",
   "version": "1.0.0",
-  "main": "emailjs-example.js",
+  "description": "Webové stránky pro výuku angličtiny - Tereza Výtisková",
+  "main": "index.html",
   "scripts": {
     "cms:dev": "netlify-cms-proxy-server",
     "dev:server": "npx http-server . -p 8080",
-    "dev": "concurrently \"npm run cms:dev\" \"npm run dev:server\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "npm run cms:dev & npm run dev:server"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kocab22/terka-web.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["netlify-cms", "static-site", "education", "english"],
+  "author": "Jaromír Kaláb",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/kocab22/terka-web/issues"
   },
-  "homepage": "https://github.com/kocab22/terka-web#readme",
-  "description": "",
+  "homepage": "https://anglickysterkou.netlify.app",
   "devDependencies": {
     "netlify-cms-proxy-server": "^1.3.24"
   }
