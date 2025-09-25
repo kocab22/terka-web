@@ -1,12 +1,13 @@
 backend:
-  name: github
-  repo: kocab22/terka-web
+  name: git-gateway
   branch: main
 
-# Bez OAuth - použije direct GitHub API
-local_backend: false
+# Media files budou ukládány do assets/uploads
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
 
-site_url: https://kocab22.github.io/terka-web
+# Lokalizace
+locale: 'cs'
 
 # Media files budou ukládány do assets/uploads
 media_folder: "assets/uploads"
