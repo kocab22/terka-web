@@ -2,8 +2,6 @@ backend:
   name: github
   repo: kocab22/terka-web
   branch: main
-  auth_type: implicit
-  app_id: Ov23livmtSHP9fK5bppl
 
 # Media files budou ukládány do assets/uploads
 media_folder: "assets/uploads"
