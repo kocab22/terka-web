@@ -2,10 +2,11 @@ backend:
   name: git-gateway
   branch: main
 
-# Lokální development s proxy
+# Lokální development s proxy (bez editorial workflow)
 local_backend: true
 
-# Editorial Workflow pro batch publikování
+# Editorial Workflow pouze pro produkci
+# V lokálním módu se vypne automaticky
 publish_mode: editorial_workflow
 
 # Media files budou ukládány do assets/uploads
