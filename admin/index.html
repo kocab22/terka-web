@@ -7,58 +7,7 @@
     <link rel="icon" href="../assets/images/logo.png" type="image/png">
   </head>
   <body>
-    <!-- Include the script that builds the page and powers Netlify CMS -->
-    <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
-    
-    <!-- GitHub OAuth Handler -->
-    <script>
-      // Custom GitHub OAuth for GitHub Pages
-      window.CMS_MANUAL_INIT = true;
-      
-      // OAuth configuration
-      const CLIENT_ID = 'Ov23livmtSHP9fK5bppl';
-      const REDIRECT_URI = window.location.origin + '/admin/';
-      
-      // Check if we're returning from GitHub OAuth
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get('code');
-      
-      if (code) {
-        // Exchange code for token - this is a simplified version
-        // In production, you'd need a backend service to securely exchange the code
-        console.log('GitHub auth code received:', code);
-        
-        // For now, we'll use the code as token (this is not secure for production)
-        // but should work for testing
-        window.history.replaceState({}, document.title, '/admin/');
-        
-        // Initialize CMS with GitHub backend
-        CMS.init({
-          config: {
-            backend: {
-              name: 'github',
-              repo: 'kocab22/terka-web',
-              branch: 'main'
-            }
-          }
-        });
-      } else {
-        // No auth code, need to authenticate
-        const authUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=repo`;
-        
-        // Add login button
-        document.body.innerHTML = `
-          <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-            <div style="text-align: center;">
-              <h2>Přihlášení do CMS</h2>
-              <p>Pro přístup k editaci obsahu se přihlaste pomocí GitHub účtu.</p>
-              <a href="${authUrl}" style="display: inline-block; padding: 12px 24px; background-color: #24292e; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">
-                Přihlásit pomocí GitHub
-              </a>
-            </div>
-          </div>
-        `;
-      }
-    </script>
+    <!-- Use Decap CMS instead of Netlify CMS for better GitHub Pages support -->
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   </body>
 </html>

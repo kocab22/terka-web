@@ -1,7 +1,5 @@
 backend:
-  name: github
-  repo: kocab22/terka-web
-  branch: main
+  name: test-repo
 
 # Media files budou ukládány do assets/uploads
 media_folder: "assets/uploads"
